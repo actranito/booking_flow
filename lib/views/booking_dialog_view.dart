@@ -31,11 +31,14 @@ class _BookingDialogViewState extends State<BookingDialogView> {
     BookingDialogStep(
       title: 'Name',
       subtitle: 'Book video call for quote',
+      text:
+          'Thank you for booking a video call with Done.\nFirst we need to know a bit about you.',
     ),
     BookingDialogStep(
-      title: 'Budget',
-      subtitle: 'Book video call for quote',
-    ),
+        title: 'Budget',
+        subtitle: 'Book video call for quote',
+        text:
+            'What is your budget? We will be in touch if we believe your project won\'t fit into the budget.'),
   ];
 
   // This variable is used to select which booking step to be displayed
@@ -124,9 +127,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
       // In case the step index is 0 we want to display the widget to get the
       // user name
       case 0:
-        return GetUserNameBookingStep(
-          userName: bookingInfo.userName,
-        );
+        return GetUserNameBookingStep(bookingInfo: bookingInfo);
 
       // In case the step index is 1 we want to display the widget to get the
       // budget
@@ -145,11 +146,14 @@ class _BookingDialogViewState extends State<BookingDialogView> {
   /// Parameters:
   ///   bookingInfo -> The current booking info object.
   Widget displayBookingSteps(BookingInfo bookingInfo) {
+    // TODO - Check if there is a better way to estimate the keyboard height
+    double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return Column(
       children: [
         BookingDialogAppBar(
           title: this._bookingDialogSteps[this._currentStepIndex].title,
           subtitle: this._bookingDialogSteps[this._currentStepIndex].subtitle,
+          text: this._bookingDialogSteps[this._currentStepIndex].text,
           showBackButton: this._currentStepIndex > 0,
           bookingProgress: this.calculateBookingProgress(),
           onBackButtonPressed: this.decrementStepIndex,
@@ -159,12 +163,12 @@ class _BookingDialogViewState extends State<BookingDialogView> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               // This Column has two Expanded empty Containers with different
-              // flex values of 2 and 3, respectively at the start and at the
-              // bottom. This was done in order to have 2/5 of the available
-              // space above the content and the remaining 3/5 below.
+              // flex values of 1 and 3, respectively at the start and at the
+              // bottom. This was done in order to have 1/4 of the available
+              // space above the content and the remaining 3/4 below.
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Container(),
                 ),
                 this.getStepView(bookingInfo),
@@ -178,10 +182,16 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                 Expanded(
                   flex: 3,
                   child: Container(),
-                )
+                ),
               ],
             ),
           ),
+        ),
+        // This empty Container is used to push the content up when the keyboard is
+        // opened so it won't be in front of any UI elements
+        Container(
+          color: Colors.transparent,
+          height: keyboardHeight,
         ),
       ],
     );
@@ -206,14 +216,22 @@ class _BookingDialogViewState extends State<BookingDialogView> {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 34.0,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Summary'),
+                bookingInfo.displayBookingInfoSummary(),
+                Expanded(
+                  child: Container(),
+                ),
                 CustomButton(
                   title: 'Confirm booking',
                   onPressed: () => print('Submit Booking'),
+                ),
+                Expanded(
+                  child: Container(),
                 ),
               ],
             ),

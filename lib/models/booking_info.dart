@@ -1,4 +1,6 @@
 import 'package:booking_flow/models/booking_budget.dart';
+import 'package:booking_flow/widgets/summary_item.dart';
+import 'package:flutter/material.dart';
 
 /// This class is used to create an object that will keep track of and validate
 /// the booking info entered by the user.
@@ -24,6 +26,26 @@ class BookingInfo {
     }
 
     return isValid;
+  }
+
+  /// This method is used to create a list that summarizes all the booking info
+  /// values.
+  Widget displayBookingInfoSummary() {
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        SummaryItem(
+          title: 'Name',
+          value: this.userName,
+        ),
+        Divider(),
+        SummaryItem(
+          title: 'Budget',
+          value: this.budget.displayableValue,
+        ),
+        Divider(),
+      ],
+    );
   }
 
   /// This method is used to create a copy from the current BookingInfo

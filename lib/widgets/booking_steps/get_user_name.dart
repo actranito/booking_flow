@@ -1,21 +1,69 @@
+import 'package:booking_flow/constants/colors.dart';
+import 'package:booking_flow/constants/text_styles.dart';
+import 'package:booking_flow/controllers/booking/booking_cubit.dart';
+import 'package:booking_flow/models/booking_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// This widget is a BookingStep and is used to get the name of the user.
-class GetUserNameBookingStep extends StatelessWidget {
-  final String? userName;
+class GetUserNameBookingStep extends StatefulWidget {
+  final BookingInfo bookingInfo;
 
   /// Constructor for this widget.
   /// Parameters:
-  ///   userName -> The name to be displayed on the textBox
+  ///   bookingInfo -> The current bookingInfo object
   const GetUserNameBookingStep({
     Key? key,
-    required this.userName,
+    required this.bookingInfo,
   }) : super(key: key);
 
   @override
+  _GetUserNameBookingStepState createState() => _GetUserNameBookingStepState();
+}
+
+class _GetUserNameBookingStepState extends State<GetUserNameBookingStep> {
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    this._textEditingController =
+        new TextEditingController(text: this.widget.bookingInfo.userName);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text((this.userName != null) ? this.userName! : ''),
+    return Container(
+      height: 48.0,
+      child: TextField(
+        controller: this._textEditingController,
+        onChanged: (textFieldValue) =>
+            (context).read<BookingCubit>().updateBookingInfo(
+                  widget.bookingInfo.copyWith(userName: textFieldValue),
+                ),
+        textCapitalization: TextCapitalization.words,
+        cursorColor: CustomColors.GRAY_2,
+        cursorHeight: 20.0,
+        cursorWidth: 1.0,
+        style: CustomTextStyles.TEXT_FIELD_EDITABLE_TEXT,
+        decoration: InputDecoration(
+          labelText: 'Your full name',
+          labelStyle: CustomTextStyles.TEXT_FIELD_LABEL,
+          floatingLabelBehavior: FloatingLabelBehavior.always,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: BorderSide(
+              color: CustomColors.TEXT_FIELD_OUTLINE,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: BorderSide(
+              color: CustomColors.TEXT_FIELD_OUTLINE,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

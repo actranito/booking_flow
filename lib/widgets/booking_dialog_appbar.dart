@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 /// Parameters:
 ///   title     -> The string to be displayed as the title (Optional).
 ///   subtitle  -> The String to be displayed as the subtitle (Optional).
+///   text -> A string to be displayed below the progress indicator (Optional).
 ///   showBackbutton  -> A boolean to control if the back button is displayed.
 ///   onBackButtonPressed ->  The function to be executed when the back button
 ///                           is pressed.
@@ -17,6 +18,7 @@ import 'package:flutter/material.dart';
 class BookingDialogAppBar extends StatelessWidget {
   final String? title;
   final String? subtitle;
+  final String? text;
   final bool showBackButton;
   final void Function() onBackButtonPressed;
   final double bookingProgress;
@@ -25,6 +27,7 @@ class BookingDialogAppBar extends StatelessWidget {
     Key? key,
     this.title,
     this.subtitle,
+    this.text,
     required this.showBackButton,
     required this.onBackButtonPressed,
     required this.bookingProgress,
@@ -122,6 +125,15 @@ class BookingDialogAppBar extends StatelessWidget {
           width: screenSize.width * this.bookingProgress,
           color: CustomColors.PURPLE,
         ),
+        if (this.text != null)
+          Padding(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 28.0),
+            child: Text(
+              this.text!,
+              style: CustomTextStyles.BOOKING_DIALOG_TEXT,
+            ),
+          ),
       ],
     );
   }
