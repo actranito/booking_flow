@@ -1,10 +1,12 @@
 import 'package:booking_flow/constants/colors.dart';
 import 'package:booking_flow/constants/text_styles.dart';
+import 'package:booking_flow/controllers/booking/booking_cubit.dart';
 import 'package:booking_flow/models/booking_info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// This widget is a BookingStep and is used to get the name of the user.
-class GetUserNameBookingStep extends StatelessWidget {
+class GetUserNameBookingStep extends StatefulWidget {
   final BookingInfo bookingInfo;
 
   /// Constructor for this widget.
@@ -16,10 +18,29 @@ class GetUserNameBookingStep extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _GetUserNameBookingStepState createState() => _GetUserNameBookingStepState();
+}
+
+class _GetUserNameBookingStepState extends State<GetUserNameBookingStep> {
+  late TextEditingController _textEditingController;
+
+  @override
+  void initState() {
+    super.initState();
+    this._textEditingController =
+        new TextEditingController(text: this.widget.bookingInfo.userName);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       height: 48.0,
       child: TextField(
+        controller: this._textEditingController,
+        onChanged: (textFieldValue) =>
+            (context).read<BookingCubit>().updateBookingInfo(
+                  widget.bookingInfo.copyWith(userName: textFieldValue),
+                ),
         textCapitalization: TextCapitalization.words,
         cursorColor: CustomColors.GRAY_2,
         cursorHeight: 20.0,

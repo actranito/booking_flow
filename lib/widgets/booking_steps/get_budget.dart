@@ -25,6 +25,8 @@ class _GetBudgetBookingStepState extends State<GetBudgetBookingStep> {
 
   @override
   void initState() {
+    super.initState();
+
     // Check if there is any budget value prevously selected, if so set the
     // selectedBudgetIndex to that value
     this._selectedBudgetIndex = kBookingBudgets.indexWhere((element) =>
@@ -35,7 +37,6 @@ class _GetBudgetBookingStepState extends State<GetBudgetBookingStep> {
     if (this._selectedBudgetIndex == 0) {
       this._selectedBudgetIndex = 0;
     }
-    super.initState();
   }
 
   void onSelected(int index) {
