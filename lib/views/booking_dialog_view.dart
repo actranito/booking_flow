@@ -168,9 +168,12 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                   child: Container(),
                 ),
                 this.getStepView(bookingInfo),
-                CustomButton(
-                  title: 'Continue',
-                  onPressed: this.incrementStepIndex,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: CustomButton(
+                    title: 'Continue',
+                    onPressed: this.incrementStepIndex,
+                  ),
                 ),
                 Expanded(
                   flex: 3,

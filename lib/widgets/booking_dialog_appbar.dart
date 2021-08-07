@@ -35,7 +35,7 @@ class BookingDialogAppBar extends StatelessWidget {
     // These const values are used to align the subtitle with the title
     // horizontally
     const double backButtonSize = 22.0;
-    const double titleLeftPadding = 6.0;
+    const double titleLeftPadding = 16.0;
     Size screenSize = MediaQuery.of(context).size;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,10 +50,10 @@ class BookingDialogAppBar extends StatelessWidget {
                 children: [
                   if (this.showBackButton)
                     // Back Button
-                    GestureDetector(
+                    InkWell(
                       onTap: this.onBackButtonPressed,
                       child: Icon(
-                        Icons.arrow_back_ios,
+                        Icons.arrow_back_ios_new,
                         size: backButtonSize,
                       ),
                     ),

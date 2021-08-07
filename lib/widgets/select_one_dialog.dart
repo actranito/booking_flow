@@ -6,18 +6,26 @@ import 'package:flutter/material.dart';
 class SelectOneDialog extends StatelessWidget {
   final List<String> options;
   final Function onSelected;
-  final int? selectedIndex;
+  final int selectedIndex;
 
+  /// Constructor for this widget.
+  /// Parameters:
+  ///   options -> List<String> containing the string to be displayed on each
+  ///              option.
+  ///   onSelected -> The function to be executed each time an option is clicked.
+  ///   selectedIndex -> The index that is currently selected
   const SelectOneDialog({
     Key? key,
     required this.options,
     required this.onSelected,
-    this.selectedIndex,
+    required this.selectedIndex,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      padding: EdgeInsets.zero,
+      physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: this.options.length,
       itemBuilder: (_, index) {
