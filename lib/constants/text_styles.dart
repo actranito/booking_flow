@@ -12,7 +12,14 @@ class CustomTextStyles {
   static const TextStyle BOOKING_DIALOG_SUBTITLE = TextStyle(
     fontFamily: 'Inter',
     fontWeight: FontWeight.normal,
-    fontSize: 15,
+    fontSize: 13.0,
+    color: CustomColors.GRAY_1,
+  );
+
+  static const TextStyle BOOKING_DIALOG_TEXT = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.normal,
+    fontSize: 15.0,
     color: CustomColors.GRAY_1,
   );
 

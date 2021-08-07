@@ -20,7 +20,6 @@ class GetUserNameBookingStep extends StatelessWidget {
     return Container(
       height: 48.0,
       child: TextField(
-        autofocus: true,
         textCapitalization: TextCapitalization.words,
         cursorColor: CustomColors.GRAY_2,
         cursorHeight: 20.0,
