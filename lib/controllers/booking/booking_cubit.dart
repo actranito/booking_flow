@@ -19,4 +19,14 @@ class BookingCubit extends Cubit<BookingState> {
   void updateBookingInfo(BookingInfo bookingInfo) {
     emit(CollectingBookingDataState(bookingInfo));
   }
+
+  Future<void> submitBooking(BookingInfo bookingInfo) async {
+    if (bookingInfo.isBookingInfoValidToSubmit()) {
+      emit(SubmittingBookingState(bookingInfo));
+      await Future.delayed(Duration(seconds: 2));
+      emit(BookingCompletedState());
+    } else {
+      emit(BookingErrorState());
+    }
+  }
 }

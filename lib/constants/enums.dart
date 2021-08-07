@@ -1,0 +1,4 @@
+enum BookingResult {
+  Canceled,
+  Confirmed,
+}

@@ -5,11 +5,18 @@ import 'package:flutter/material.dart';
 /// Parameters:
 ///   - title -> The String to display on the button (Optional)
 ///   - onPressed -> The function to execute when the button is pressed (Optional)
+///   - leading -> A Widget displayed before the title (Optional)
 class CustomButton extends StatelessWidget {
   final String? title;
   final void Function()? onPressed;
+  final Widget? leading;
 
-  const CustomButton({Key? key, this.title, this.onPressed}) : super(key: key);
+  const CustomButton({
+    Key? key,
+    this.title,
+    this.onPressed,
+    this.leading,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,17 @@ class CustomButton extends StatelessWidget {
       width: double.infinity,
       child: TextButton(
         onPressed: this.onPressed,
-        child: Text(this.title ?? ''),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (this.leading != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: this.leading!,
+              ),
+            Text(this.title ?? ''),
+          ],
+        ),
         style: ButtonStyle(
             foregroundColor: MaterialStateProperty.all(CustomColors.WHITE),
             // If the onPressed function is null, set background color to

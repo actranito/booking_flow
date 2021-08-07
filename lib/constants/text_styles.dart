@@ -50,4 +50,11 @@ class CustomTextStyles {
     fontSize: 15.0,
     color: CustomColors.BLACK,
   );
+
+  static const TextStyle ALERT_DIALOG_TITLE = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+    fontSize: 20.0,
+    color: CustomColors.BLACK,
+  );
 }
