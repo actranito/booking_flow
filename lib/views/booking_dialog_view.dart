@@ -31,11 +31,14 @@ class _BookingDialogViewState extends State<BookingDialogView> {
     BookingDialogStep(
       title: 'Name',
       subtitle: 'Book video call for quote',
+      text:
+          'Thank you for booking a video call with Done.\nFirst we need to know a bit about you.',
     ),
     BookingDialogStep(
-      title: 'Budget',
-      subtitle: 'Book video call for quote',
-    ),
+        title: 'Budget',
+        subtitle: 'Book video call for quote',
+        text:
+            'What is your budget? We will be in touch if we believe your project won\'t fit into the budget.'),
   ];
 
   // This variable is used to select which booking step to be displayed
@@ -150,6 +153,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
         BookingDialogAppBar(
           title: this._bookingDialogSteps[this._currentStepIndex].title,
           subtitle: this._bookingDialogSteps[this._currentStepIndex].subtitle,
+          text: this._bookingDialogSteps[this._currentStepIndex].text,
           showBackButton: this._currentStepIndex > 0,
           bookingProgress: this.calculateBookingProgress(),
           onBackButtonPressed: this.decrementStepIndex,
