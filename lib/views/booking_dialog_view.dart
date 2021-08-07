@@ -1,9 +1,12 @@
+import 'package:booking_flow/controllers/booking/booking_cubit.dart';
 import 'package:booking_flow/models/booking_dialog_step.dart';
+import 'package:booking_flow/models/booking_info.dart';
 import 'package:booking_flow/widgets/booking_dialog_appbar.dart';
 import 'package:booking_flow/widgets/booking_steps/get_budget.dart';
 import 'package:booking_flow/widgets/booking_steps/get_user_name.dart';
 import 'package:booking_flow/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// This class returns a Booking Dialog Widget.
 /// This Widget is responsible for collecting the user's booking info and
@@ -16,22 +19,22 @@ class BookingDialogView extends StatefulWidget {
 }
 
 class _BookingDialogViewState extends State<BookingDialogView> {
-  // This list is used to keep track of all the necessary steps for the
-  // booking process. In case there is a need to add another step, just add
-  // another BookingDialogStep object to the list in the index where you want
-  // it to appear.
-  // The progress indicator is automatically updated by using the length of this
-  // list.
+  /// This list is used to keep track of all the necessary steps for the
+  /// booking process. In case there is a need to add another step, just add
+  /// another BookingDialogStep object to the list in the index where you want
+  /// it to appear.
+  /// The progress indicator is automatically updated by using the length of this
+  /// list.
+  /// !IMPORTANT! - Please make sure to update the "getStepView" method when
+  /// changing this list. If not, an exception will be thrown to warn you about it.
   final List<BookingDialogStep> _bookingDialogSteps = [
     BookingDialogStep(
       title: 'Name',
       subtitle: 'Book video call for quote',
-      body: GetUserNameBookingStep(),
     ),
     BookingDialogStep(
       title: 'Budget',
       subtitle: 'Book video call for quote',
-      body: GetBudgetBookingStep(),
     ),
   ];
 
@@ -71,18 +74,77 @@ class _BookingDialogViewState extends State<BookingDialogView> {
         height: screenSize.height * 0.93,
         child: Builder(
           builder: (context) {
-            if (this._currentStepIndex < this._bookingDialogSteps.length) {
-              return this.displayBookingSteps();
-            } else {
-              return this.displaySummary();
+            // Watch for changes in the state of the BookingCubit and react
+            // accordingly.
+            BookingState bookingState = (context).watch<BookingCubit>().state;
+
+            // If bookingState is CollectingBookingDataState we want to display
+            // the different booking steps and, at the end, the summary
+            if (bookingState is CollectingBookingDataState) {
+              if (this._currentStepIndex < this._bookingDialogSteps.length) {
+                return this.displayBookingSteps(bookingState.bookingInfo);
+              } else {
+                return this.displaySummary(bookingState.bookingInfo);
+              }
+            }
+            // If the bookingState is SubmittingBookingState... TODO - finish
+            else if (bookingState is SubmittingBookingState) {
+              return Center(
+                child: Text('SubmittingBookingState'),
+              );
+            }
+            // If the bookingState is BookingCompletedState... TODO - finish
+            else if (bookingState is BookingCompletedState) {
+              return Center(
+                child: Text('BookingCompletedState'),
+              );
+            }
+            // If the bookingState is BookingErrorState... TODO - finish
+            else if (bookingState is BookingErrorState) {
+              return Center(
+                child: Text('BookingErrorState'),
+              );
+            }
+            // In case of Unknown State
+            else {
+              return Center(
+                child: Text('Unknown State'),
+              );
             }
           },
         ));
   }
 
+  /// This method is used to get the widget to display in the body of the
+  /// Booking Dialog.
+  /// Parameters:
+  ///   bookingInfo -> The current booking info object.
+  Widget getStepView(BookingInfo bookingInfo) {
+    switch (this._currentStepIndex) {
+      // In case the step index is 0 we want to display the widget to get the
+      // user name
+      case 0:
+        return GetUserNameBookingStep(
+          userName: bookingInfo.userName,
+        );
+
+      // In case the step index is 1 we want to display the widget to get the
+      // budget
+      case 1:
+        return GetBudgetBookingStep(bookingInfo: bookingInfo);
+
+      // Throw an error in case the step counter
+      // has an unexpected value
+      default:
+        throw 'Unknown \"currentStepIndex\" value';
+    }
+  }
+
   /// This mehtod is used to display all the booking steps that are in the
   /// "bookingDialogSteps" variable. The steps will be displayed by index order.
-  Widget displayBookingSteps() {
+  /// Parameters:
+  ///   bookingInfo -> The current booking info object.
+  Widget displayBookingSteps(BookingInfo bookingInfo) {
     return Column(
       children: [
         BookingDialogAppBar(
@@ -96,13 +158,24 @@ class _BookingDialogViewState extends State<BookingDialogView> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              // This Column has two Expanded empty Containers with different
+              // flex values of 2 and 3, respectively at the start and at the
+              // bottom. This was done in order to have 2/5 of the available
+              // space above the content and the remaining 3/5 below.
               children: [
-                _bookingDialogSteps[_currentStepIndex].body ?? Container(),
+                Expanded(
+                  flex: 2,
+                  child: Container(),
+                ),
+                this.getStepView(bookingInfo),
                 CustomButton(
                   title: 'Continue',
                   onPressed: this.incrementStepIndex,
                 ),
+                Expanded(
+                  flex: 3,
+                  child: Container(),
+                )
               ],
             ),
           ),
@@ -115,7 +188,9 @@ class _BookingDialogViewState extends State<BookingDialogView> {
   /// This will show at the end of all the booking steps and a back arrow will
   /// be displayed, allowing the user to go back to the booking steps if
   /// necessary.
-  Widget displaySummary() {
+  /// Parameters:
+  ///   bookingInfo -> The current booking info object.
+  Widget displaySummary(BookingInfo bookingInfo) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

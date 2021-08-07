@@ -7,6 +7,9 @@ class CustomColors {
   static const Color BUTTON_BG = Color(0xFF000000);
   static const Color BUTTON_OVERLAY = Color(0xFF232323);
   static const Color BUTTON_DISABLED = Color(0xFFD4D4D4);
+  static const Color SELECT_ONE_BUTTON_OUTLINE = Color(0xFFC4C4C4);
+  static const Color SELECT_ONE_BUTTON_OUTLINE_SELECTED = Color(0xFF6734C7);
+  static const Color SELECT_ONE_BUTTON_OUTLINE_OVERLAY = Color(0xFFFCFCFC);
 
   // Generic color codes
   static const Color BLACK = Color(0xFF000000);
