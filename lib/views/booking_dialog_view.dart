@@ -143,6 +143,8 @@ class _BookingDialogViewState extends State<BookingDialogView> {
   /// Parameters:
   ///   bookingInfo -> The current booking info object.
   Widget displayBookingSteps(BookingInfo bookingInfo) {
+    // TODO - Check if there is a better way to estimate the keyboard height
+    double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return Column(
       children: [
         BookingDialogAppBar(
@@ -157,12 +159,12 @@ class _BookingDialogViewState extends State<BookingDialogView> {
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               // This Column has two Expanded empty Containers with different
-              // flex values of 2 and 3, respectively at the start and at the
-              // bottom. This was done in order to have 2/5 of the available
-              // space above the content and the remaining 3/5 below.
+              // flex values of 1 and 3, respectively at the start and at the
+              // bottom. This was done in order to have 1/4 of the available
+              // space above the content and the remaining 3/4 below.
               children: [
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Container(),
                 ),
                 this.getStepView(bookingInfo),
@@ -180,6 +182,12 @@ class _BookingDialogViewState extends State<BookingDialogView> {
               ],
             ),
           ),
+        ),
+        // This empty Container is used to push the content up when the keyboard is
+        // opened so it won't be in front of any UI elements
+        Container(
+          color: Colors.transparent,
+          height: keyboardHeight,
         ),
       ],
     );
