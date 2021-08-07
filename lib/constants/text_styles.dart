@@ -36,4 +36,18 @@ class CustomTextStyles {
     fontSize: 13.0,
     color: CustomColors.BLACK,
   );
+
+  static const TextStyle SUMMARY_TITLE = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.normal,
+    fontSize: 13.0,
+    color: CustomColors.GRAY_1,
+  );
+
+  static const TextStyle SUMMARY_VALUE = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+    fontSize: 15.0,
+    color: CustomColors.BLACK,
+  );
 }

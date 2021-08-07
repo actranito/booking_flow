@@ -216,14 +216,22 @@ class _BookingDialogViewState extends State<BookingDialogView> {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical: 34.0,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Summary'),
+                bookingInfo.displayBookingInfoSummary(),
+                Expanded(
+                  child: Container(),
+                ),
                 CustomButton(
                   title: 'Confirm booking',
                   onPressed: () => print('Submit Booking'),
+                ),
+                Expanded(
+                  child: Container(),
                 ),
               ],
             ),
