@@ -19,7 +19,14 @@ class CollectingBookingDataState extends BookingState {
 }
 
 /// This state is emitted when the app is trying to submit the booking.
-class SubmittingBookingState extends BookingState {}
+class SubmittingBookingState extends BookingState {
+  final BookingInfo bookingInfo;
+
+  SubmittingBookingState(this.bookingInfo);
+
+  @override
+  List<Object> get props => [this.bookingInfo];
+}
 
 /// This state is emitted when the booking was submitted successfully.
 class BookingCompletedState extends BookingState {}

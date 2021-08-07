@@ -1,7 +1,9 @@
 import 'package:booking_flow/constants/colors.dart';
+import 'package:booking_flow/constants/enums.dart';
 import 'package:booking_flow/controllers/booking/booking_cubit.dart';
 import 'package:booking_flow/views/booking_dialog_view.dart';
 import 'package:booking_flow/widgets/custom_button.dart';
+import 'package:booking_flow/widgets/custom_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,6 +45,16 @@ class StartupView extends StatelessWidget {
             create: (context) => BookingCubit(),
             child: BookingDialogView(),
           );
-        });
+        }).then((bookingResult) {
+      if (bookingResult is BookingResult) {
+        // If the bookingResult was confirmed, show a dialog stating that
+        // information
+        if (bookingResult == BookingResult.Confirmed) {
+          showDialog(
+              context: context,
+              builder: (context) => CustomDialog(title: 'Booking Complete'));
+        }
+      }
+    });
   }
 }

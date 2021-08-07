@@ -1,3 +1,4 @@
+import 'package:booking_flow/constants/enums.dart';
 import 'package:booking_flow/controllers/booking/booking_cubit.dart';
 import 'package:booking_flow/models/booking_dialog_step.dart';
 import 'package:booking_flow/models/booking_info.dart';
@@ -5,6 +6,7 @@ import 'package:booking_flow/widgets/booking_dialog_appbar.dart';
 import 'package:booking_flow/widgets/booking_steps/get_budget.dart';
 import 'package:booking_flow/widgets/booking_steps/get_user_name.dart';
 import 'package:booking_flow/widgets/custom_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,46 +77,56 @@ class _BookingDialogViewState extends State<BookingDialogView> {
     Size screenSize = MediaQuery.of(context).size;
     return Container(
         height: screenSize.height * 0.93,
-        child: Builder(
-          builder: (context) {
-            // Watch for changes in the state of the BookingCubit and react
-            // accordingly.
-            BookingState bookingState = (context).watch<BookingCubit>().state;
-
-            // If bookingState is CollectingBookingDataState we want to display
-            // the different booking steps and, at the end, the summary
-            if (bookingState is CollectingBookingDataState) {
-              if (this._currentStepIndex < this._bookingDialogSteps.length) {
-                return this.displayBookingSteps(bookingState.bookingInfo);
-              } else {
-                return this.displaySummary(bookingState.bookingInfo);
+        child: BlocListener<BookingCubit, BookingState>(
+          listener: (context, state) {
+            if (state is BookingCompletedState) {
+              // If we change to the BookingCompletedState we want to close
+              // the modalBottomSheet
+              NavigatorState navigator = Navigator.of(context);
+              if (navigator.canPop()) {
+                navigator.pop(BookingResult.Confirmed);
               }
             }
-            // If the bookingState is SubmittingBookingState... TODO - finish
-            else if (bookingState is SubmittingBookingState) {
-              return Center(
-                child: Text('SubmittingBookingState'),
-              );
-            }
-            // If the bookingState is BookingCompletedState... TODO - finish
-            else if (bookingState is BookingCompletedState) {
-              return Center(
-                child: Text('BookingCompletedState'),
-              );
-            }
-            // If the bookingState is BookingErrorState... TODO - finish
-            else if (bookingState is BookingErrorState) {
-              return Center(
-                child: Text('BookingErrorState'),
-              );
-            }
-            // In case of Unknown State
-            else {
-              return Center(
-                child: Text('Unknown State'),
-              );
-            }
           },
+          child: Builder(
+            builder: (context) {
+              // Watch for changes in the state of the BookingCubit and react
+              // accordingly.
+              BookingState bookingState = (context).watch<BookingCubit>().state;
+
+              // If bookingState is CollectingBookingDataState we want to display
+              // the different booking steps and, at the end, the summary
+              if (bookingState is CollectingBookingDataState) {
+                if (this._currentStepIndex < this._bookingDialogSteps.length) {
+                  return this.displayBookingSteps(bookingState.bookingInfo);
+                } else {
+                  return this.displaySummary(bookingState.bookingInfo, false);
+                }
+              }
+              // If the bookingState is SubmittingBookingState... TODO - finish
+              else if (bookingState is SubmittingBookingState) {
+                return this.displaySummary(bookingState.bookingInfo, true);
+              }
+              // If the bookingState is BookingCompletedState we return an empty
+              // container, because the BlocListener will close the
+              // modalBottomSheet so nothing needs to be displayed
+              else if (bookingState is BookingCompletedState) {
+                return Container();
+              }
+              // If the bookingState is BookingErrorState... TODO - finish
+              else if (bookingState is BookingErrorState) {
+                return Center(
+                  child: Text('BookingErrorState'),
+                );
+              }
+              // In case of Unknown State
+              else {
+                return Center(
+                  child: Text('Unknown State'),
+                );
+              }
+            },
+          ),
         ));
   }
 
@@ -203,7 +215,8 @@ class _BookingDialogViewState extends State<BookingDialogView> {
   /// necessary.
   /// Parameters:
   ///   bookingInfo -> The current booking info object.
-  Widget displaySummary(BookingInfo bookingInfo) {
+  ///   isSubmitting -> Flag that indicates if the booking is being submitted
+  Widget displaySummary(BookingInfo bookingInfo, bool isSubmitting) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -211,7 +224,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
           title: 'Summary',
           subtitle: 'Book video call for quote',
           showBackButton: this._currentStepIndex > 0,
-          onBackButtonPressed: this.decrementStepIndex,
+          onBackButtonPressed: isSubmitting ? null : this.decrementStepIndex,
           bookingProgress: this.calculateBookingProgress(),
         ),
         Expanded(
@@ -227,8 +240,16 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                   child: Container(),
                 ),
                 CustomButton(
-                  title: 'Confirm booking',
-                  onPressed: () => print('Submit Booking'),
+                  leading: isSubmitting
+                      ? Theme(
+                          data: ThemeData(
+                              cupertinoOverrideTheme: CupertinoThemeData(
+                                  brightness: Brightness.dark)),
+                          child: CupertinoActivityIndicator())
+                      : null,
+                  title: isSubmitting ? 'Confirming...' : 'Confirm booking',
+                  onPressed: () =>
+                      (context).read<BookingCubit>().submitBooking(bookingInfo),
                 ),
                 Expanded(
                   child: Container(),

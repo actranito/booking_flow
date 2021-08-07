@@ -1,4 +1,5 @@
 import 'package:booking_flow/constants/colors.dart';
+import 'package:booking_flow/constants/enums.dart';
 import 'package:booking_flow/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +21,7 @@ class BookingDialogAppBar extends StatelessWidget {
   final String? subtitle;
   final String? text;
   final bool showBackButton;
-  final void Function() onBackButtonPressed;
+  final void Function()? onBackButtonPressed;
   final double bookingProgress;
 
   const BookingDialogAppBar({
@@ -84,7 +85,7 @@ class BookingDialogAppBar extends StatelessWidget {
                       // ModalBottomSheet
                       NavigatorState navigator = Navigator.of(context);
                       if (navigator.canPop()) {
-                        navigator.pop();
+                        navigator.pop(BookingResult.Canceled);
                       }
                     },
                     child: Text(
