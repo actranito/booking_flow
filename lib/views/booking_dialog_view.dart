@@ -124,9 +124,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
       // In case the step index is 0 we want to display the widget to get the
       // user name
       case 0:
-        return GetUserNameBookingStep(
-          userName: bookingInfo.userName,
-        );
+        return GetUserNameBookingStep(bookingInfo: bookingInfo);
 
       // In case the step index is 1 we want to display the widget to get the
       // budget
@@ -178,7 +176,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                 Expanded(
                   flex: 3,
                   child: Container(),
-                )
+                ),
               ],
             ),
           ),

@@ -13,6 +13,20 @@ class CustomTextStyles {
     fontFamily: 'Inter',
     fontWeight: FontWeight.normal,
     fontSize: 15,
-    color: CustomColors.GRAY,
+    color: CustomColors.GRAY_1,
+  );
+
+  static const TextStyle TEXT_FIELD_LABEL = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.w600,
+    fontSize: 13.0,
+    color: CustomColors.GRAY_2,
+  );
+
+  static const TextStyle TEXT_FIELD_EDITABLE_TEXT = TextStyle(
+    fontFamily: 'Inter',
+    fontWeight: FontWeight.normal,
+    fontSize: 13.0,
+    color: CustomColors.BLACK,
   );
 }
