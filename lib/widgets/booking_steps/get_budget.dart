@@ -75,6 +75,7 @@ class _GetBudgetBookingStepState extends State<GetBudgetBookingStep> {
           Expanded(
             flex: 13,
             child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
               child: Column(
                 children: [
                   SelectOneDialog(

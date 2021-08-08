@@ -32,6 +32,7 @@ class BookingInfo {
   /// values.
   Widget displayBookingInfoSummary() {
     return ListView(
+      physics: BouncingScrollPhysics(),
       shrinkWrap: true,
       children: [
         SummaryItem(

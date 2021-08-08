@@ -52,6 +52,7 @@ class _GetUserNameBookingStepState extends State<GetUserNameBookingStep> {
             Expanded(
               flex: 5,
               child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Column(
                   children: [
                     TextFormField(
