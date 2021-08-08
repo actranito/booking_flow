@@ -44,67 +44,69 @@ class _GetUserNameBookingStepState extends State<GetUserNameBookingStep> {
       child: Form(
         key: this._formKey,
         child: Column(
-          // This Column has two Expanded empty Containers with different
-          // flex values of 1 and 3, respectively at the start and at the
-          // bottom. This was done in order to have 1/4 of the available
-          // space above the content and the remaining 3/4 below.
           children: [
             Expanded(
               flex: 1,
               child: Container(),
             ),
-            TextFormField(
-              controller: this._textEditingController,
-              onSaved: (textFieldValue) =>
-                  (context).read<BookingCubit>().updateBookingInfo(
-                        widget.bookingInfo.copyWith(userName: textFieldValue),
+            Expanded(
+              flex: 5,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: this._textEditingController,
+                      onSaved: (textFieldValue) =>
+                          (context).read<BookingCubit>().updateBookingInfo(
+                                widget.bookingInfo
+                                    .copyWith(userName: textFieldValue),
+                              ),
+                      textCapitalization: TextCapitalization.words,
+                      cursorColor: CustomColors.GRAY_2,
+                      cursorHeight: 20.0,
+                      cursorWidth: 1.0,
+                      style: CustomTextStyles.TEXT_FIELD_EDITABLE_TEXT,
+                      decoration: InputDecoration(
+                        contentPadding: new EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 10.0),
+                        labelText: 'Your full name',
+                        labelStyle: CustomTextStyles.TEXT_FIELD_LABEL,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: CustomColors.TEXT_FIELD_OUTLINE,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: CustomColors.TEXT_FIELD_OUTLINE,
+                          ),
+                        ),
                       ),
-              textCapitalization: TextCapitalization.words,
-              cursorColor: CustomColors.GRAY_2,
-              cursorHeight: 20.0,
-              cursorWidth: 1.0,
-              style: CustomTextStyles.TEXT_FIELD_EDITABLE_TEXT,
-              decoration: InputDecoration(
-                contentPadding:
-                    new EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-                labelText: 'Your full name',
-                labelStyle: CustomTextStyles.TEXT_FIELD_LABEL,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                    color: CustomColors.TEXT_FIELD_OUTLINE,
-                  ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide(
-                    color: CustomColors.TEXT_FIELD_OUTLINE,
-                  ),
+                      validator: (text) {
+                        if (text == null || text.isEmpty) {
+                          return 'Name can\'t be empty';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 20.0),
+                    CustomButton(
+                      title: 'Continue',
+                      onPressed: () {
+                        if (this._formKey.currentState != null) {
+                          if (this._formKey.currentState!.validate()) {
+                            this._formKey.currentState!.save();
+                            this.widget.onContinue();
+                          }
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ),
-              validator: (text) {
-                if (text == null || text.isEmpty) {
-                  return 'Name can\'t be empty';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 20.0),
-            CustomButton(
-              title: 'Continue',
-              onPressed: () {
-                if (this._formKey.currentState != null) {
-                  if (this._formKey.currentState!.validate()) {
-                    this._formKey.currentState!.save();
-                    this.widget.onContinue();
-                  }
-                }
-              },
-            ),
-            Expanded(
-              flex: 3,
-              child: Container(),
             ),
           ],
         ),

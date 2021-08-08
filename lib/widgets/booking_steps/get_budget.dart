@@ -67,30 +67,31 @@ class _GetBudgetBookingStepState extends State<GetBudgetBookingStep> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
-        // This Column has two Expanded empty Containers with different
-        // flex values of 1 and 3, respectively at the start and at the
-        // bottom. This was done in order to have 1/4 of the available
-        // space above the content and the remaining 3/4 below.
         children: [
           Expanded(
             flex: 1,
             child: Container(),
           ),
-          SelectOneDialog(
-            options: displayableValues,
-            onSelected: this.onSelected,
-            selectedIndex: this._selectedBudgetIndex,
-          ),
-          const SizedBox(height: 20.0),
-          CustomButton(
-            title: 'Continue',
-            onPressed: () {
-              this.widget.onContinue();
-            },
-          ),
           Expanded(
-            flex: 3,
-            child: Container(),
+            flex: 13,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SelectOneDialog(
+                    options: displayableValues,
+                    onSelected: this.onSelected,
+                    selectedIndex: this._selectedBudgetIndex,
+                  ),
+                  const SizedBox(height: 20.0),
+                  CustomButton(
+                    title: 'Continue',
+                    onPressed: () {
+                      this.widget.onContinue();
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
