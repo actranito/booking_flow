@@ -6,6 +6,7 @@ import 'package:booking_flow/widgets/booking_dialog_appbar.dart';
 import 'package:booking_flow/widgets/booking_steps/get_budget.dart';
 import 'package:booking_flow/widgets/booking_steps/get_user_name.dart';
 import 'package:booking_flow/widgets/custom_button.dart';
+import 'package:booking_flow/widgets/custom_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -87,6 +88,20 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                 navigator.pop(BookingResult.Confirmed);
               }
             }
+            // If the state changes to errorState we show a dialog
+            // and return to CollectingBookingDataState
+            else if (state is BookingErrorState) {
+              showDialog(
+                  context: context,
+                  builder: (context) =>
+                      CustomDialog(title: 'Something went wrong')).then(
+                // When the error dialog is dismissed, we use the updateBookingInfo
+                // method to go back to CollectingBookingDataState
+                (value) => (context)
+                    .read<BookingCubit>()
+                    .updateBookingInfo(state.bookingInfo),
+              );
+            }
           },
           child: Builder(
             builder: (context) {
@@ -103,7 +118,8 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                   return this.displaySummary(bookingState.bookingInfo, false);
                 }
               }
-              // If the bookingState is SubmittingBookingState... TODO - finish
+              // If the bookingState is SubmittingBookingState we want to display
+              // the summary page and the "Confirming..." info on the button
               else if (bookingState is SubmittingBookingState) {
                 return this.displaySummary(bookingState.bookingInfo, true);
               }
@@ -113,11 +129,15 @@ class _BookingDialogViewState extends State<BookingDialogView> {
               else if (bookingState is BookingCompletedState) {
                 return Container();
               }
-              // If the bookingState is BookingErrorState... TODO - finish
+              // If the bookingState is BookingErrorState we display
+              // a dialog (done in the listener), and continue displaying the
+              // bookingSteps/Summary
               else if (bookingState is BookingErrorState) {
-                return Center(
-                  child: Text('BookingErrorState'),
-                );
+                if (this._currentStepIndex < this._bookingDialogSteps.length) {
+                  return this.displayBookingSteps(bookingState.bookingInfo);
+                } else {
+                  return this.displaySummary(bookingState.bookingInfo, false);
+                }
               }
               // In case of Unknown State
               else {
@@ -164,7 +184,8 @@ class _BookingDialogViewState extends State<BookingDialogView> {
   /// Parameters:
   ///   bookingInfo -> The current booking info object.
   Widget displayBookingSteps(BookingInfo bookingInfo) {
-    // TODO - Check if there is a better way to estimate the keyboard height
+    // Using the viewInsets.bottom property to get the height of the keyboard,
+    // so later we can adjust the modalBottomSheet content with it
     double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return Column(
       children: [
@@ -220,17 +241,24 @@ class _BookingDialogViewState extends State<BookingDialogView> {
                   child: Container(),
                 ),
                 CustomButton(
-                  leading: isSubmitting
-                      ? Theme(
-                          data: ThemeData(
-                              cupertinoOverrideTheme: CupertinoThemeData(
-                                  brightness: Brightness.dark)),
-                          child: CupertinoActivityIndicator())
-                      : null,
-                  title: isSubmitting ? 'Confirming...' : 'Confirm booking',
-                  onPressed: () =>
-                      (context).read<BookingCubit>().submitBooking(bookingInfo),
-                ),
+                    leading: isSubmitting
+                        ? Theme(
+                            data: ThemeData(
+                                cupertinoOverrideTheme: CupertinoThemeData(
+                                    brightness: Brightness.dark)),
+                            child: CupertinoActivityIndicator())
+                        : null,
+                    title: isSubmitting ? 'Confirming...' : 'Confirm booking',
+                    onPressed: () {
+                      // In case we are already submitting the booking we dont
+                      // want to do it again in case the user presses the button
+                      // again
+                      if (!isSubmitting) {
+                        (context)
+                            .read<BookingCubit>()
+                            .submitBooking(bookingInfo);
+                      }
+                    }),
                 Expanded(
                   child: Container(),
                 ),

@@ -52,7 +52,7 @@ class StartupView extends StatelessWidget {
         if (bookingResult == BookingResult.Confirmed) {
           showDialog(
               context: context,
-              builder: (context) => CustomDialog(title: 'Booking Complete'));
+              builder: (context) => CustomDialog(title: 'Booking complete'));
         }
       }
     });
