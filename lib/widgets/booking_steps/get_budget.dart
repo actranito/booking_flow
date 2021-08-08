@@ -1,6 +1,7 @@
 import 'package:booking_flow/constants/generic.dart';
 import 'package:booking_flow/controllers/booking/booking_cubit.dart';
 import 'package:booking_flow/models/booking_info.dart';
+import 'package:booking_flow/widgets/custom_button.dart';
 import 'package:booking_flow/widgets/select_one_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,12 +9,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 /// This widget is a BookingStep and is used to get the budget for a booking.
 class GetBudgetBookingStep extends StatefulWidget {
   final BookingInfo bookingInfo;
+  final void Function() onContinue;
 
   /// Constructor for this widget.
   /// Parameters:
   ///   bookingInfo -> The current bookingInfo object
-  const GetBudgetBookingStep({Key? key, required this.bookingInfo})
-      : super(key: key);
+  ///   onContinue -> The function to execute when the "Continue" button is
+  ///                 pressed.
+  const GetBudgetBookingStep({
+    Key? key,
+    required this.bookingInfo,
+    required this.onContinue,
+  }) : super(key: key);
 
   @override
   _GetBudgetBookingStepState createState() => _GetBudgetBookingStepState();
@@ -57,10 +64,37 @@ class _GetBudgetBookingStepState extends State<GetBudgetBookingStep> {
         .toList();
 
     // Display a SelectOne dialog to show the possible budget options
-    return SelectOneDialog(
-      options: displayableValues,
-      onSelected: this.onSelected,
-      selectedIndex: this._selectedBudgetIndex,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Container(),
+          ),
+          Expanded(
+            flex: 13,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SelectOneDialog(
+                    options: displayableValues,
+                    onSelected: this.onSelected,
+                    selectedIndex: this._selectedBudgetIndex,
+                  ),
+                  const SizedBox(height: 20.0),
+                  CustomButton(
+                    title: 'Continue',
+                    onPressed: () {
+                      this.widget.onContinue();
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

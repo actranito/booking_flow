@@ -139,12 +139,18 @@ class _BookingDialogViewState extends State<BookingDialogView> {
       // In case the step index is 0 we want to display the widget to get the
       // user name
       case 0:
-        return GetUserNameBookingStep(bookingInfo: bookingInfo);
+        return GetUserNameBookingStep(
+          bookingInfo: bookingInfo,
+          onContinue: this.incrementStepIndex,
+        );
 
       // In case the step index is 1 we want to display the widget to get the
       // budget
       case 1:
-        return GetBudgetBookingStep(bookingInfo: bookingInfo);
+        return GetBudgetBookingStep(
+          bookingInfo: bookingInfo,
+          onContinue: this.incrementStepIndex,
+        );
 
       // Throw an error in case the step counter
       // has an unexpected value
@@ -171,33 +177,7 @@ class _BookingDialogViewState extends State<BookingDialogView> {
           onBackButtonPressed: this.decrementStepIndex,
         ),
         Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              // This Column has two Expanded empty Containers with different
-              // flex values of 1 and 3, respectively at the start and at the
-              // bottom. This was done in order to have 1/4 of the available
-              // space above the content and the remaining 3/4 below.
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Container(),
-                ),
-                this.getStepView(bookingInfo),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20.0),
-                  child: CustomButton(
-                    title: 'Continue',
-                    onPressed: this.incrementStepIndex,
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Container(),
-                ),
-              ],
-            ),
-          ),
+          child: this.getStepView(bookingInfo),
         ),
         // This empty Container is used to push the content up when the keyboard is
         // opened so it won't be in front of any UI elements
