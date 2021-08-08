@@ -32,4 +32,11 @@ class SubmittingBookingState extends BookingState {
 class BookingCompletedState extends BookingState {}
 
 /// This state is emitted when an error occured.
-class BookingErrorState extends BookingState {}
+class BookingErrorState extends BookingState {
+  final BookingInfo bookingInfo;
+
+  BookingErrorState(this.bookingInfo);
+
+  @override
+  List<Object> get props => [this.bookingInfo];
+}

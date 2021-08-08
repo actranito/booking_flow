@@ -26,7 +26,7 @@ class BookingCubit extends Cubit<BookingState> {
       await Future.delayed(Duration(seconds: 2));
       emit(BookingCompletedState());
     } else {
-      emit(BookingErrorState());
+      emit(BookingErrorState(bookingInfo));
     }
   }
 }
