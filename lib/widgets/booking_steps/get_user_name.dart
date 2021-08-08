@@ -56,11 +56,13 @@ class _GetUserNameBookingStepState extends State<GetUserNameBookingStep> {
                   children: [
                     TextFormField(
                       controller: this._textEditingController,
-                      onSaved: (textFieldValue) =>
+                      onSaved: (textFieldValue) {
+                        if (textFieldValue != null) {
                           (context).read<BookingCubit>().updateBookingInfo(
-                                widget.bookingInfo
-                                    .copyWith(userName: textFieldValue),
-                              ),
+                              widget.bookingInfo.copyWith(
+                                  userName: textFieldValue.trimRight()));
+                        }
+                      },
                       textCapitalization: TextCapitalization.words,
                       cursorColor: CustomColors.GRAY_2,
                       cursorHeight: 20.0,
